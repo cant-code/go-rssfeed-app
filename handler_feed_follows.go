@@ -32,7 +32,7 @@ func (apiCfg *apiConfig) handlerCreateFeedFollow(w http.ResponseWriter, r *http.
 		FeedID:    params.FeedID,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldnt create feed: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldnt create feed follows: %v", err))
 		return
 	}
 
@@ -43,7 +43,7 @@ func (apiCfg *apiConfig) handlerGetFeedFollows(w http.ResponseWriter, r *http.Re
 
 	feed, err := apiCfg.DB.GetFeedFollows(r.Context(), user.ID)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldnt create feed: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldnt fetch feed follows: %v", err))
 		return
 	}
 
@@ -63,7 +63,7 @@ func (apiCfg *apiConfig) handlerDeleteFeedFollows(w http.ResponseWriter, r *http
 		FeedID: feedFollowId,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldnt create feed: %v", err))
+		respondWithError(w, 400, fmt.Sprintf("Couldnt delete feed follows: %v", err))
 		return
 	}
 
