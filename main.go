@@ -2,11 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/cant-code/go-rssfeed-app/internal/database"
 	"github.com/go-chi/cors"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
@@ -19,6 +21,12 @@ type apiConfig struct {
 }
 
 func main() {
+	feed, err := urlToFeed("https://wagslane.dev/index.xml")
+	if err != nil {
+		log.Fatal("Error fetching feed: ", err)
+	}
+	fmt.Println(feed)
+
 	godotenv.Load(".env")
 
 	portString := os.Getenv("PORT")
@@ -36,9 +44,12 @@ func main() {
 		log.Fatal("Cant connect to the db: ", err)
 	}
 
+	db := database.New(conn)
 	apiCfg := apiConfig{
-		DB: database.New(conn),
+		DB: db,
 	}
+
+	go startScraping(db, 10, time.Minute)
 
 	router := chi.NewRouter()
 
